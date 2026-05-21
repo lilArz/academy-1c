@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h4>📥 Поступления</h4>
+    <a href="{% url 'documents:income_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i> Добавить
+    </a>
+</div>
+<div class="card">
+    <table class="table mb-0">
+        <thead>
+            <tr><th>Номер</th><th>Дата</th><th>Поставщик</th><th>Склад</th><th>Статус</th><th>Сумма</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for d in docs %}
+        <tr>
+            <td><a href="{% url 'documents:income_detail' d.pk %}" style="color:#4f46e5;font-weight:500;">{{ d.number }}</a></td>
+            <td>{{ d.date }}</td>
+            <td>{{ d.partner }}</td>
+            <td>{{ d.warehouse }}</td>
+            <td>
+                {% if d.status == 'posted' %}<span class="badge" style="background:#d1fae5;color:#065f46;">✅ Проведён</span>
+                {% elif d.status == 'draft' %}<span class="badge" style="background:#f1f5f9;color:#475569;">📝 Черновик</span>
+                {% else %}<span class="badge" style="background:#fee2e2;color:#991b1b;">❌ Отменён</span>{% endif %}
+            </td>
+            <td><strong>{{ d.get_total }} сом</strong></td>
+            <td>
+                <div class="d-flex gap-1">
+                    <a href="{% url 'documents:income_edit' d.pk %}" class="btn btn-sm btn-outline-primary" style="border-radius:6px;"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'documents:income_delete' d.pk %}" class="btn btn-sm btn-outline-danger" style="border-radius:6px;"><i class="bi bi-trash"></i></a>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-center py-5">
+                <div style="font-size:48px;">📥</div>
+                <div style="font-size:15px;font-weight:600;margin-top:8px;">Поступлений нет</div>
+                <a href="{% url 'documents:income_create' %}" class="btn btn-primary btn-sm mt-2">+ Создать первое</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <h4>📥 {{ doc }}</h4>
+    <div class="d-flex gap-2">
+        {% if doc.status != 'posted' %}
+        <a href="{% url 'documents:income_post' doc.pk %}" class="btn btn-success btn-sm">
+            <i class="bi bi-check2-circle me-1"></i> Провести
+        </a>
+        <a href="{% url 'documents:income_edit' doc.pk %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-pencil me-1"></i> Изменить
+        </a>
+        {% endif %}
+        <a href="{% url 'documents:income_delete' doc.pk %}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-trash me-1"></i> Удалить
+        </a>
+        <a href="{% url 'documents:income_list' %}" class="btn btn-outline-secondary btn-sm">← Назад</a>
+    </div>
+</div>
+
+<!-- Статус -->
+<div class="mb-3">
+    {% if doc.status == 'posted' %}
+        <span class="badge" style="background:#d1fae5;color:#065f46;font-size:13px;padding:6px 14px;border-radius:20px;">
+            ✅ Проведён
+        </span>
+    {% elif doc.status == 'draft' %}
+        <span class="badge" style="background:#f1f5f9;color:#475569;font-size:13px;padding:6px 14px;border-radius:20px;">
+            📝 Черновик
+        </span>
+    {% else %}
+        <span class="badge" style="background:#fee2e2;color:#991b1b;font-size:13px;padding:6px 14px;border-radius:20px;">
+            ❌ Отменён
+        </span>
+    {% endif %}
+</div>
+
+<!-- Реквизиты -->
+<div class="card p-4 mb-3">
+    <div class="row">
+        <div class="col-md-3">
+            <div style="font-size:12px;color:#9ca3af;">Поставщик</div>
+            <div style="font-weight:500;">{{ doc.partner }}</div>
+        </div>
+        <div class="col-md-3">
+            <div style="font-size:12px;color:#9ca3af;">Склад</div>
+            <div style="font-weight:500;">{{ doc.warehouse }}</div>
+        </div>
+        <div class="col-md-3">
+            <div style="font-size:12px;color:#9ca3af;">Дата</div>
+            <div style="font-weight:500;">{{ doc.date }}</div>
+        </div>
+        <div class="col-md-3">
+            <div style="font-size:12px;color:#9ca3af;">Создал</div>
+            <div style="font-weight:500;">{{ doc.created_by|default:"—" }}</div>
+        </div>
+    </div>
+    {% if doc.comment %}
+    <div class="mt-3">
+        <div style="font-size:12px;color:#9ca3af;">Комментарий</div>
+        <div>{{ doc.comment }}</div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Таблица товаров -->
+<div class="card">
+    <div class="p-3 border-bottom" style="font-weight:600;">Товары</div>
+    <table class="table mb-0">
+        <thead>
+            <tr><th>#</th><th>Товар</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }} {{ item.product.unit|default:"" }}</td>
+            <td>{{ item.price }} сом</td>
+            <td><strong>{{ item.get_amount }} сом</strong></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" class="text-end fw-bold">Итого:</td>
+                <td class="fw-bold" style="color:#4f46e5;font-size:16px;">{{ doc.get_total }} сом</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <h4>🏭 Склады</h4>
+    <a href="{% url 'references:warehouse_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i> Добавить
+    </a>
+</div>
+
+<div class="card">
+    <table class="table mb-0">
+        <thead>
+            <tr><th>Название</th><th>Адрес</th><th>Статус</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for w in warehouses %}
+        <tr>
+            <td style="font-weight:500;">{{ w.name }}</td>
+            <td>{{ w.address|default:"—" }}</td>
+            <td>
+                {% if w.is_active %}
+                    <span class="badge" style="background:#d1fae5;color:#065f46;">● Активен</span>
+                {% else %}
+                    <span class="badge" style="background:#fee2e2;color:#991b1b;">● Блок</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="d-flex gap-1">
+                    <a href="{% url 'references:warehouse_edit' w.pk %}" class="btn btn-sm btn-outline-primary" style="border-radius:6px;">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{% url 'references:warehouse_delete' w.pk %}" class="btn btn-sm btn-outline-danger" style="border-radius:6px;">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center py-5">
+                <div style="font-size:48px;">🏭</div>
+                <div style="font-size:15px;font-weight:600;margin-top:8px;">Складов нет</div>
+                <a href="{% url 'references:warehouse_create' %}" class="btn btn-primary btn-sm mt-2">+ Добавить</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

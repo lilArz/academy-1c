@@ -1,0 +1,744 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1С Академия</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+        }
+
+        /* ========== САЙДБАР ========== */
+        .sidebar {
+            width: 230px;
+            min-width: 230px;
+            min-height: 100vh;
+            background: #16213e;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: #16213e; }
+        .sidebar::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
+
+        /* ========== ЛОГОТИП ========== */
+        .sidebar-logo {
+            padding: 16px;
+            border-bottom: 1px solid #1e3a5f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 90px;
+        }
+
+        .sidebar-logo img {
+            height: 65px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* ========== СЕКЦИИ МЕНЮ ========== */
+        .nav-section {
+            padding: 18px 16px 5px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            color: #334155;
+        }
+
+        /* ========== ССЫЛКИ МЕНЮ ========== */
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 9px 16px;
+            font-size: 13.5px;
+            transition: all 0.15s ease;
+            margin: 1px 6px;
+            border-radius: 6px;
+        }
+
+        .sidebar a:hover {
+            color: #e2e8f0;
+            background: #1e3a5f;
+        }
+
+        .sidebar a.active {
+            color: #ffffff;
+            background: #4f46e5;
+            font-weight: 500;
+        }
+
+        .sidebar a i {
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ========== НИЗ САЙДБАРА ========== */
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid #1e3a5f;
+            padding: 10px 0;
+        }
+
+        .sidebar-bottom a {
+            color: #64748b;
+        }
+
+        .sidebar-bottom a:hover {
+            color: #e2e8f0;
+            background: #1e3a5f;
+        }
+
+        /* ========== ТОПБАР ========== */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 230px;
+            right: 0;
+            height: 58px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 12px;
+            z-index: 99;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .topbar-search {
+            flex: 1;
+            max-width: 340px;
+            position: relative;
+        }
+
+        .topbar-search input {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 7px 14px 7px 38px;
+            font-size: 13px;
+            background: #f8fafc;
+            outline: none;
+            color: #374151;
+            transition: all 0.2s;
+        }
+
+        .topbar-search input:focus {
+            border-color: #4f46e5;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+        }
+
+        .topbar-search .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .topbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar-icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            position: relative;
+            font-size: 16px;
+            transition: background 0.15s;
+        }
+
+        .topbar-icon-btn:hover {
+            background: #e2e8f0;
+            color: #374151;
+        }
+
+        .topbar-icon-btn .badge-dot {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 7px;
+            height: 7px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 5px 6px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .topbar-user:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .topbar-user .avatar {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 50%;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .topbar-user .username {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .topbar-user .chevron {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        /* ========== ОСНОВНОЙ КОНТЕНТ ========== */
+        .main-wrap {
+            margin-left: 230px;
+            padding-top: 58px;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            padding: 26px;
+        }
+
+        /* ========== КАРТОЧКИ ========== */
+        .card {
+            border: 1px solid #e8ecf0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: white;
+        }
+
+        .stat-card {
+            border-radius: 14px;
+            padding: 22px;
+            border: none;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 30px;
+            opacity: 0.9;
+        }
+
+        .stat-card .stat-num {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-top: 8px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-top: 3px;
+            font-weight: 400;
+        }
+
+        /* ========== ТАБЛИЦЫ ========== */
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #9ca3af;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 13px 16px;
+            background: #fafbfc;
+        }
+
+        .table td {
+            font-size: 13.5px;
+            padding: 12px 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f8fafc;
+            color: #374151;
+        }
+
+        .table tbody tr {
+            transition: background 0.1s;
+        }
+
+        .table tbody tr:hover {
+            background: #f8faff;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ========== БЕЙДЖИ ========== */
+        .badge {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        /* ========== КНОПКИ ========== */
+        .btn-primary {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            border-radius: 8px;
+            font-size: 13px;
+            padding: 8px 18px;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            border-color: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+        }
+
+        .btn-outline-secondary {
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .btn-outline-primary {
+            border-radius: 8px;
+            font-size: 13px;
+            color: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .btn-outline-primary:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .btn-outline-danger {
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .btn-success {
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        /* ========== ЗАГОЛОВОК СТРАНИЦЫ ========== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .page-header h4 {
+            font-size: 21px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        /* ========== АЛЕРТЫ ========== */
+        .alert {
+            border-radius: 10px;
+            font-size: 13.5px;
+        }
+
+        /* ========== ФОРМЫ ========== */
+        .form-control {
+            border-radius: 8px;
+            font-size: 13px;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+        }
+
+        .form-select {
+            border-radius: 8px;
+            font-size: 13px;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+        }
+
+        .form-select:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        /* ========== DARK MODE ========== */
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        body.dark .topbar {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        body.dark .topbar-search input {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark .topbar-search input::placeholder {
+            color: #475569;
+        }
+
+        body.dark .topbar-user {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        body.dark .topbar-user .username {
+            color: #e2e8f0;
+        }
+
+        body.dark .topbar-icon-btn {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+
+        body.dark .topbar-icon-btn:hover {
+            background: #263348;
+        }
+
+        body.dark .card {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        body.dark .table th {
+            color: #64748b;
+            border-color: #334155;
+            background: #182032;
+        }
+
+        body.dark .table td {
+            color: #cbd5e1;
+            border-color: #1e293b;
+        }
+
+        body.dark .table tbody tr:hover {
+            background: #243447;
+        }
+
+        body.dark .form-control {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark .form-select {
+            background-color: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark .page-header h4 {
+            color: #f1f5f9;
+        }
+
+        body.dark .main-wrap {
+            background: #0f172a;
+        }
+
+        body.dark .border-top {
+            border-color: #334155 !important;
+        }
+
+        body.dark .border-bottom {
+            border-color: #334155 !important;
+        }
+
+        body.dark .btn-outline-secondary {
+            color: #94a3b8;
+            border-color: #334155;
+        }
+
+        body.dark .text-muted {
+            color: #64748b !important;
+        }
+    </style>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+
+<div class="sidebar">
+
+    <div class="sidebar-logo" style="background: transparent !important; width: 100% !important; min-height: 140px !important; display: flex !important; justify-content: center !important; align-items: center !important; padding: 20px 0 10px 0 !important;">
+         <a href="/" style="background: transparent !important; display: flex !important; justify-content: center !important; align-items: center !important; width: 120px !important; height: 120px !important; text-decoration: none !important;">
+                <img src="{% static 'img/logo.png' %}" alt="1C ARZ" style="width: 120px !important; height: 120px !important; max-width: 120px !important; max-height: 120px !important; min-width: 120px !important; min-height: 120px !important; object-fit: cover !important; border-radius: 22px !important; display: block !important;">
+        </a>
+    </div>
+
+    <!-- ГЛАВНАЯ -->
+    <div class="nav-section">Главная</div>
+    <a href="{% url 'references:dashboard' %}"
+       class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Дашборд</span>
+    </a>
+
+    <!-- СПРАВОЧНИКИ -->
+    <div class="nav-section">Справочники</div>
+    <a href="{% url 'references:product_list' %}"
+       class="{% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_create' or request.resolver_match.url_name == 'product_edit' %}active{% endif %}">
+        <i class="bi bi-box-seam-fill"></i>
+        <span>Товары</span>
+    </a>
+    <a href="{% url 'references:partner_list' %}"
+       class="{% if request.resolver_match.url_name == 'partner_list' or request.resolver_match.url_name == 'partner_create' or request.resolver_match.url_name == 'partner_edit' %}active{% endif %}">
+        <i class="bi bi-people-fill"></i>
+        <span>Контрагенты</span>
+    </a>
+    <a href="{% url 'references:warehouse_list' %}"
+       class="{% if request.resolver_match.url_name == 'warehouse_list' or request.resolver_match.url_name == 'warehouse_create' %}active{% endif %}">
+        <i class="bi bi-building-fill"></i>
+        <span>Склады</span>
+    </a>
+
+    <!-- ДОКУМЕНТЫ -->
+    <div class="nav-section">Документы</div>
+    <a href="{% url 'documents:income_list' %}"
+       class="{% if request.resolver_match.url_name == 'income_list' or request.resolver_match.url_name == 'income_detail' or request.resolver_match.url_name == 'income_create' %}active{% endif %}">
+        <i class="bi bi-arrow-down-circle-fill"></i>
+        <span>Поступления</span>
+    </a>
+    <a href="{% url 'documents:sale_list' %}"
+       class="{% if request.resolver_match.url_name == 'sale_list' or request.resolver_match.url_name == 'sale_detail' or request.resolver_match.url_name == 'sale_create' %}active{% endif %}">
+        <i class="bi bi-arrow-up-circle-fill"></i>
+        <span>Реализации</span>
+    </a>
+    <a href="{% url 'documents:invoice_list' %}"
+       class="{% if request.resolver_match.url_name == 'invoice_list' or request.resolver_match.url_name == 'invoice_create' %}active{% endif %}">
+        <i class="bi bi-receipt-cutoff"></i>
+        <span>Счета</span>
+    </a>
+
+    <!-- СКЛАД -->
+    <div class="nav-section">Склад</div>
+    <a href="{% url 'warehouse:stock_list' %}"
+       class="{% if request.resolver_match.url_name == 'stock_list' %}active{% endif %}">
+        <i class="bi bi-layers-fill"></i>
+        <span>Остатки</span>
+    </a>
+    <a href="{% url 'warehouse:movement_list' %}"
+       class="{% if request.resolver_match.url_name == 'movement_list' %}active{% endif %}">
+        <i class="bi bi-arrow-left-right"></i>
+        <span>Движения</span>
+    </a>
+
+    <!-- БУХГАЛТЕРИЯ -->
+    <div class="nav-section">Бухгалтерия</div>
+    <a href="{% url 'accounting:payment_list' %}"
+       class="{% if request.resolver_match.url_name == 'payment_list' %}active{% endif %}">
+        <i class="bi bi-cash-coin"></i>
+        <span>Оплаты</span>
+    </a>
+
+    <!-- ОТЧЁТЫ -->
+    <div class="nav-section">Отчёты</div>
+    <a href="{% url 'reports:stock' %}"
+       class="{% if request.resolver_match.url_name == 'stock' %}active{% endif %}">
+        <i class="bi bi-bar-chart-fill"></i>
+        <span>Остатки</span>
+    </a>
+    <a href="{% url 'reports:sales' %}"
+       class="{% if request.resolver_match.url_name == 'sales' %}active{% endif %}">
+        <i class="bi bi-graph-up-arrow"></i>
+        <span>Продажи</span>
+    </a>
+    <a href="{% url 'reports:debts' %}"
+       class="{% if request.resolver_match.url_name == 'debts' %}active{% endif %}">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>Долги</span>
+    </a>
+
+    <!-- СИСТЕМА -->
+    {% if user.is_staff %}
+    <div class="nav-section">Система</div>
+    <a href="/admin/" target="_blank">
+        <i class="bi bi-gear-fill"></i>
+        <span>Администрирование</span>
+    </a>
+    {% endif %}
+
+    <!-- НИЗ САЙДБАРА -->
+    <div class="sidebar-bottom">
+        <a href="{% url 'users:profile' %}">
+            <i class="bi bi-person-circle"></i>
+            <span>{{ user.username }}</span>
+        </a>
+        <a href="{% url 'users:logout' %}">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Выйти</span>
+        </a>
+    </div>
+
+</div>
+<!-- ========== КОНЕЦ САЙДБАРА ========== -->
+
+<!-- ========== ТОПБАР ========== -->
+<div class="topbar">
+    <div class="topbar-search">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="Поиск...">
+    </div>
+    <div class="topbar-right">
+
+        <!-- Кнопка темы -->
+        <button class="topbar-icon-btn" id="themeToggle" title="Сменить тему">
+            <i class="bi bi-moon-fill" id="themeIcon"></i>
+        </button>
+
+        <!-- Уведомления -->
+        <button class="topbar-icon-btn" title="Уведомления">
+            <i class="bi bi-bell-fill"></i>
+            <span class="badge-dot"></span>
+        </button>
+
+        <!-- Пользователь -->
+        <a href="{% url 'users:profile' %}" class="topbar-user">
+            <div class="avatar">{{ user.username|first|upper }}</div>
+            <span class="username">{{ user.username }}</span>
+            <i class="bi bi-chevron-down chevron"></i>
+        </a>
+
+    </div>
+</div>
+<!-- ========== КОНЕЦ ТОПБАРА ========== -->
+
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
+<div class="main-wrap">
+    <div class="main-content">
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+
+    </div>
+</div>
+<!-- ========== КОНЕЦ КОНТЕНТА ========== -->
+
+{% else %}
+
+    {% block nocontent %}{% endblock %}
+
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // ========== DARK MODE ==========
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // Применяем сохранённую тему при загрузке
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        if (themeIcon) themeIcon.className = 'bi bi-sun-fill';
+    }
+
+    // Переключатель темы
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            themeIcon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    }
+</script>
+
+</body>
+</html>

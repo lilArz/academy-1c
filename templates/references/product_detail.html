@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'references:product_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Назад</a>
+<div class="card p-4" style="max-width: 500px;">
+    <h5 class="fw-bold mb-3">{{ product.name }}</h5>
+    <p><strong>Код:</strong> {{ product.code }}</p>
+    <p><strong>Категория:</strong> {{ product.category|default:"—" }}</p>
+    <p><strong>Единица:</strong> {{ product.unit|default:"—" }}</p>
+    <p><strong>Цена:</strong> {{ product.price }} сом</p>
+    <p><strong>Описание:</strong> {{ product.description|default:"—" }}</p>
+    <a href="/admin/references/product/{{ product.pk }}/change/" class="btn btn-outline-primary btn-sm">Редактировать</a>
+</div>
+{% endblock %}

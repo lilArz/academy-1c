@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header"><h4>Удаление</h4></div>
+<div class="card p-4" style="max-width:480px;">
+    <div class="text-center mb-4">
+        <div style="font-size:48px;">🗑️</div>
+        <h5 class="mt-2">Вы уверены?</h5>
+        <p style="font-size:13px;color:#6b7280;">
+            Удалить <strong>{{ object }}</strong>?<br>Это действие нельзя отменить.
+        </p>
+    </div>
+    <form method="post" class="d-flex gap-2 justify-content-center">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger px-4">
+            <i class="bi bi-trash me-1"></i> Удалить
+        </button>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">Отмена</a>
+    </form>
+</div>
+{% endblock %}

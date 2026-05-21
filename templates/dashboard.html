@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <h4>📊 Дашборд</h4>
+    <span class="text-muted" style="font-size:13px;">Добро пожаловать, {{ user.username }}!</span>
+</div>
+
+<!-- Статистика -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);">
+            <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+            <div class="stat-num mt-2">{{ total_products }}</div>
+            <div class="stat-label">Активных товаров</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #059669, #10b981);">
+            <div class="stat-icon"><i class="bi bi-people"></i></div>
+            <div class="stat-num mt-2">{{ total_partners }}</div>
+            <div class="stat-label">Контрагентов</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #d97706, #f59e0b);">
+            <div class="stat-icon"><i class="bi bi-arrow-up-circle"></i></div>
+            <div class="stat-num mt-2">{{ total_sales }}</div>
+            <div class="stat-label">Реализаций</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #dc2626, #ef4444);">
+            <div class="stat-icon"><i class="bi bi-arrow-down-circle"></i></div>
+            <div class="stat-num mt-2">{{ total_income }}</div>
+            <div class="stat-label">Поступлений</div>
+        </div>
+    </div>
+</div>
+
+<!-- Быстрые ссылки -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3">
+            <div class="d-flex align-items-center gap-3">
+                <div style="width:42px;height:42px;background:#ede9fe;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-plus-circle" style="color:#4f46e5;font-size:20px;"></i>
+                </div>
+                <div>
+                    <div style="font-size:13px;font-weight:600;">Новое поступление</div>
+                    <a href="/admin/documents/incomedocument/add/" style="font-size:12px;color:#4f46e5;">Создать →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <div class="d-flex align-items-center gap-3">
+                <div style="width:42px;height:42px;background:#d1fae5;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-cart-plus" style="color:#059669;font-size:20px;"></i>
+                </div>
+                <div>
+                    <div style="font-size:13px;font-weight:600;">Новая реализация</div>
+                    <a href="/admin/documents/saledocument/add/" style="font-size:12px;color:#059669;">Создать →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <div class="d-flex align-items-center gap-3">
+                <div style="width:42px;height:42px;background:#fef3c7;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-receipt" style="color:#d97706;font-size:20px;"></i>
+                </div>
+                <div>
+                    <div style="font-size:13px;font-weight:600;">Новый счёт</div>
+                    <a href="/admin/documents/invoice/add/" style="font-size:12px;color:#d97706;">Создать →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Мало на складе -->
+<div class="card">
+    <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
+        <span style="font-weight:600;font-size:14px;">⚠️ Мало на складе</span>
+        <a href="{% url 'warehouse:stock_list' %}" style="font-size:12px;color:#4f46e5;">Все остатки →</a>
+    </div>
+    <table class="table mb-0">
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th>Склад</th>
+                <th>Остаток</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for s in low_stock %}
+        <tr>
+            <td>{{ s.product.name }}</td>
+            <td>{{ s.warehouse.name }}</td>
+            <td><span class="badge bg-danger">{{ s.quantity }}</span></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="text-center text-success py-3">
+                <i class="bi bi-check-circle me-1"></i> Все товары в норме
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
