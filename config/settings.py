@@ -27,7 +27,10 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # Разрешенные хосты (для разработки разрешены все)
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://academy-1c.onrender.com']
+CSRF_TRUSTED_ORIGINS = [
+    'https://academy-1c.onrender.com',
+    'https://*.onrender.com'
+]
 # ==============================================================================
 # ПРИЛОЖЕНИЯ СИСТЕМЫ
 # ==============================================================================
